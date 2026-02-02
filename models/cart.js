@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 const p = path.join(
     path.dirname(process.mainModule.filename),
@@ -20,9 +21,9 @@ module.exports = class Cart {
             const existingProduct = cart.products[existingProductIndex];
             let updatedProduct;
             // If the product is already in the cart
-            if (existingProductIndex) {
+            if (existingProductIndex >= 0) {
                 // Copy existing product and increment qty
-                updatedProduct = { ...existingProductIndex };
+                updatedProduct = { ...existingProduct };
                 updatedProduct.qty = updatedProduct.qty + 1;
                 // Replace product immutably
                 cart.products = [...cart.products];
@@ -33,7 +34,7 @@ module.exports = class Cart {
                 cart.products = [...cart.products, updatedProduct];
             }
             // Update total price
-            cart.totalPrice = cart.totalPrice + productPrice;
+            cart.totalPrice = cart.totalPrice + +productPrice;
             fs.writeFile(p, JSON.stringify(cart), err => {
                 console.log(err);
             })

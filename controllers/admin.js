@@ -1,12 +1,10 @@
 const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
-    res.render('admin/add-product', {
+    res.render('admin/edit-product', {
         pageTitle: 'Add Product',
+        // Here shouldn't be changes to 'edit-product' because we are reusing the same template
         path: '/admin/add-product',
-        formCSS: true,
-        productCSS: true,
-        activeAddProduct: true
     });
 };
 
@@ -19,6 +17,14 @@ exports.postAddProduct = (req, res, next) => {
     product.save();
 
     res.redirect('/');
+};
+
+// Edit product page handler
+exports.getEditProduct = (req, res, next) => {
+    res.render('admin/edit-product', {
+        pageTitle: 'Add Product',
+        path: '/admin/add-product',
+    });
 };
 
 exports.getProducts = (req, res, next) => {

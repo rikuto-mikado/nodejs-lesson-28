@@ -5,6 +5,7 @@ exports.getAddProduct = (req, res, next) => {
         pageTitle: 'Add Product',
         // Here shouldn't be changes to 'edit-product' because we are reusing the same template
         path: '/admin/add-product',
+        editing: false
     });
 };
 

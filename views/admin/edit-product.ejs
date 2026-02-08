@@ -7,10 +7,11 @@
     <%- include('../includes/nav.ejs') %>
 
     <main>
-        <form class="product-form" action="/admin/add-product" method="POST">
+        <form class="product-form" action="/admin/<% if (editing) { %>edit-product<% } else { %>add-product<% } %>" method="POST">
             <div class="form-control">
                 <label for="title">Title</label>
-                <input type="text" name="title" id="title">
+                <!-- Use the "equals" tag to output a value, not the plain tag which only executes code -->
+                <input type="text" name="title" id="title" value="<% if (editing) { %><%= product.title %><% } %>">
             </div>
             <div class="form-control">
                 <label for="imageUrl">Image URL</label>
@@ -25,7 +26,8 @@
                 <textarea name="description" id="description" rows="5"></textarea>
             </div>
 
-            <button class="btn" type="submit">Add Product</button>
+            <!-- Display "Update Product" if in edit mode, otherwise "Add Product" -->
+            <button class="btn" type="submit"><% if (editing) { %>Update Product<% } else { %>Add Product<% } %></button>
         </form>
     </main>
 <%- include('../includes/end.ejs') %>

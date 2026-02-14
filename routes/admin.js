@@ -15,4 +15,6 @@ router.post('/add-product', adminController.postAddProduct);
 // :productId is a placeholder for dynamic values in the URL
 router.get('/edit-product/:productId', adminController.getEditProduct);
 
+router.post('/edit-product', adminController.postEditProduct);
+
 module.exports = router;

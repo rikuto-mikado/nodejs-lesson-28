@@ -36,14 +36,18 @@ module.exports = class Product {
                 const updatedProducts = [...products];
                 // Overwrite the old product data at that index with the current instance (this)
                 updatedProducts[existingProductIndex] = this;
+                products.push(this);
+                // Write the updated products array back to the JSON file
+                fs.writeFile(p, JSON.stringify(updatedProducts), err => {
+                    console.log(err);
+                });
             } else {
-                // No ID exists — this is a new product, so we fall through to create it below
+                this.id = Math.random().toString();
+                products.push(this);
+                fs.writeFile(p, JSON.stringify(products), err => {
+                    console.log(err);
+                });
             }
-            this.id = Math.random().toString();
-            products.push(this);
-            fs.writeFile(p, JSON.stringify(products), err => {
-                console.log(err);
-            });
         });
     }
 

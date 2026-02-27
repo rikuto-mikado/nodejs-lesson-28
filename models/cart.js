@@ -46,6 +46,8 @@ module.exports = class Cart {
             if (err) {
                 return;
             }
+            // JSON.parse is required to convert the raw Buffer/string from fs.readFile into a JavaScript object.
+            // Without it, fileContent remains a Buffer and accessing properties like .products would throw a TypeError.
             const updatedCart = { ...JSON.parse(fileContent) };
             productIndex = updatedCart.products.findIndex(
                 prod => prod.id === id
@@ -59,6 +61,20 @@ module.exports = class Cart {
             fs.writeFile(p, JSON.stringify(updatedCart), err => {
                 console.log(err);
             });
+        });
+    }
+
+    // Read-only method that retrieves the current cart data from the file.
+    // Used when rendering the cart page to display what products are currently in the cart.
+    // Passes null to the callback if the file doesn't exist, or the parsed cart object if it does.
+    static getCart(cb) {
+        fs.readFile(p, (err, fileContent) => {
+            if (err) {
+                cb(null)
+            } else {
+                const cart = JSON.parse(fileContent);
+                cb(cart);
+            }
         });
     }
 };

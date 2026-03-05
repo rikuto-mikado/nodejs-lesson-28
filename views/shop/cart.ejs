@@ -4,6 +4,18 @@
 <body>
     <%- include('../includes/nav.ejs') %>
     <main>
-        
+        <%# If the cart has at least one item, render the list %>
+        <% if (products.length > 0) { %>
+            <ul>
+                <%# Loop over each cart item; p = { productData: {...}, qty: N } %>
+                <% products.forEach(p => { %>
+                    <%# Display product title and quantity %>
+                    <li><%= p.productData.title %> (<%= p.qty %>)</li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <%# Fallback message when the cart is empty %>
+            <h1>No Products here</h1>
+        <% } %>
     </main>
     <%- include('../includes/end.ejs') %>

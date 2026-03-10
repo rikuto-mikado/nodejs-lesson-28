@@ -62,6 +62,16 @@ exports.postCart = (req, res, next) => {
     res.redirect('/cart');
 };
 
+// Handles POST request to delete a product from the cart.
+// Finds the product by ID to retrieve its price, then removes it from the cart.
+exports.postCartDeleteProduct = (req, res, next) => {
+    const prodId = req.body.productId;
+    product.findById(prodId, product => {
+        Cart.deleteProduct(prodId, product.price);
+        res.redirect('/cart');
+    });
+}
+
 exports.getOrders = (req, res, next) => {
     res.render('shop/order', {
         path: '/orders',

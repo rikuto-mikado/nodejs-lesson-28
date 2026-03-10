@@ -17,6 +17,9 @@ router.get('/cart', shopController.getCart);
 // Handle POST request to add a product to the cart
 router.post('/cart', shopController.postCart);
 
+// Handle POST request to remove a specific item from the cart
+router.post('/cart-delete-item', shopController.postCartDeleteProduct);
+
 router.get('/orders', shopController.getOrders);
 
 router.get('/checkout', shopController.getCheckout);

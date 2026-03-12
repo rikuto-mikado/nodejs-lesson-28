@@ -192,16 +192,3 @@ cart.totalPrice = cart.totalPrice + +productPrice;
 ```
 
 Without it, `+` would concatenate strings instead of adding numbers.
-
-### Bug: redundant `products.push(this)` in `save()`
-
-In `models/product.js` line 41, inside the update (`if (this.id)`) branch, there is a stray `products.push(this)` that does nothing — `updatedProducts` (not `products`) is what gets written to the file. It is dead code and can be safely removed.
-
-```js
-if (this.id) {
-    const updatedProducts = [...products];
-    updatedProducts[existingProductIndex] = this;
-    products.push(this);          // ← BUG: pushes to products, but updatedProducts is saved
-    fs.writeFile(p, JSON.stringify(updatedProducts), ...);
-}
-```

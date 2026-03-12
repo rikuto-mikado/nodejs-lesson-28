@@ -38,7 +38,6 @@ module.exports = class Product {
                 const updatedProducts = [...products];
                 // Overwrite the old product data at that index with the current instance (this)
                 updatedProducts[existingProductIndex] = this;
-                products.push(this);
                 // Write the updated products array back to the JSON file
                 fs.writeFile(p, JSON.stringify(updatedProducts), err => {
                     console.log(err);

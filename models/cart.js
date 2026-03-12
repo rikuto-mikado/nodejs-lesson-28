@@ -49,9 +49,10 @@ module.exports = class Cart {
             // JSON.parse is required to convert the raw Buffer/string from fs.readFile into a JavaScript object.
             // Without it, fileContent remains a Buffer and accessing properties like .products would throw a TypeError.
             const updatedCart = { ...JSON.parse(fileContent) };
-            productIndex = updatedCart.products.findIndex(
-                prod => prod.id === id
-            );
+            const product = updatedCart.products.find(prod => prod.id === id);
+            if (!product) {
+                return;
+            }
             const productQty = product.qty;
             updatedCart.products = updatedCart.products.filter(
                 prod => prod.id !== id

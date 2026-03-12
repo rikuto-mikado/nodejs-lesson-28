@@ -2,6 +2,15 @@
 
 ## What I Learned
 
+- **Dynamic route params** — Express lets you define a URL segment as a variable with `:paramName`. The value is available in the controller via `req.params.paramName`.
+- **Query strings** — `?editing=true` appended to a URL is read via `req.query.editing`. Used here to tell the template whether to render "Add" or "Edit" mode.
+- **Edit flow pattern** — Two routes share the same form template:
+  1. `GET /admin/edit-product/:productId?editing=true` → load product data, pre-fill the form
+  2. `POST /admin/edit-product` → read form data, save (update) the product
+- **Hidden input** — The product ID is passed through the form using `<input type="hidden">` so the POST handler knows which product to update.
+- **Single template for Add & Edit** — One EJS file handles both modes. An `editing` boolean flag switches labels, button text, and whether fields are pre-filled.
+- **`save()` as upsert** — The model's `save()` method acts as an upsert: it updates if `this.id` exists, otherwise creates a new product.
+
 ## Tricky Parts
 
 ### EJS Tag Differences
@@ -162,3 +171,37 @@ updated.push(newProduct);
 > For simple Node.js file-based storage like this project, spread + index or direct mutation both work fine.
 
 ## Memo
+
+### Dynamic route params vs query strings
+
+| | Syntax | Read via | Example |
+|---|---|---|---|
+| Route param | `/products/:id` | `req.params.id` | `/products/0.123` |
+| Query string | `/products?editing=true` | `req.query.editing` | `/products?editing=true` |
+
+Route params are for **identity** (which resource). Query strings are for **modifiers** (what to do with it).
+
+### Unary `+` for string-to-number conversion
+
+In `cart.js`, `+productPrice` converts the price string from `req.body` to a number before arithmetic:
+
+```js
+cart.totalPrice = cart.totalPrice + +productPrice;
+//                                  ↑
+//                         converts string → number
+```
+
+Without it, `+` would concatenate strings instead of adding numbers.
+
+### Bug: redundant `products.push(this)` in `save()`
+
+In `models/product.js` line 41, inside the update (`if (this.id)`) branch, there is a stray `products.push(this)` that does nothing — `updatedProducts` (not `products`) is what gets written to the file. It is dead code and can be safely removed.
+
+```js
+if (this.id) {
+    const updatedProducts = [...products];
+    updatedProducts[existingProductIndex] = this;
+    products.push(this);          // ← BUG: pushes to products, but updatedProducts is saved
+    fs.writeFile(p, JSON.stringify(updatedProducts), ...);
+}
+```
